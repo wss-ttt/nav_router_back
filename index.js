@@ -65,22 +65,41 @@ app.post('/login', function(req, res) {
   })
 })
 
-// 查询所有的数据
-app.get('/students/list', function(req, res) {
-	let sql = 'select * from students';
+// 查询
+app.post('/user/list', function(req, res) {
+	let sql = 'select * from user'
 	connection.query(sql, function(err, results) {
-		if (err) {
+		if(err) {
 			return res.json({
 				code: 1,
-				message: 'error',
-			});
+				msg: 'error'
+			})
 		}
 		res.json({
 			code: 0,
-			message: 'success',
+			msg: 'success',
 			data: results
-		});
-	});
+		})
+	})
+})
+
+// 删除
+app.post('/user/remove', function(req, res) {
+	let id = req.body.id
+	let sql = 'delete from user where id = ?'
+	let params = [id]
+	connection.query(sql, params, function(err, results) {
+		if(err) {
+			return res.json({
+				code: 1,
+				msg: 'error'
+			})
+		}
+		res.json({
+			code: 0,
+			msg: '删除成功'
+		})
+	})
 })
 
 // 根据主键查询单条数据
@@ -189,30 +208,6 @@ app.post('/students/update', function(req, res) {
 		});
 	});
 });
-
-
-app.post("/", function(req, res) {
-	console.log(JSON.stringify(req.body));
-	res.send({
-		hello: 'world'
-	});
-})
-
-app.post("/test", function(req, res) {
-	var parms = req.body;
-	var id = parms.id;
-	var name = parms.name;
-	console.log('id', id);
-	console.log('name', name);
-	res.send({
-		id: id,
-		name: name,
-		msg: 'success'
-	});
-})
-
-
-
 
 app.listen(3001, function() {
 	console.log('服务启动成功');
