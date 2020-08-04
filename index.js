@@ -83,7 +83,7 @@ app.post('/user/list', function(req, res) {
 	})
 })
 
-// 删除
+// remove接口
 app.post('/user/remove', function(req, res) {
 	let id = req.body.id
 	let sql = 'delete from user where id = ?'
@@ -102,112 +102,61 @@ app.post('/user/remove', function(req, res) {
 	})
 })
 
-// 根据主键查询单条数据
-app.get('/students/details', function(req, res) {
-	let id = req.query.id;  // app获取参数
-	let sql = 'select * from students where id =?';
-	connection.query(sql, id, function(err, results) {
-		if (err) {
-			return res.json({
-				code: 1,
-				message: 'error'
-			});
-		}
-		res.json({
-			code: 0,
-			message: 'success',
-			// data: results    // 这样返回的是一个数组
-			// 因为查询出来就只有一条数据 我们就直接返回一个对象
-			data: results[0] // results是一个数组
-		});
-	});
-});
+// info接口
+app.post('/user/info', function(req, res) {
+  let id = req.body.id
+  let sql = 'select * from user where id = ?';
+  let params = [id];
+  connection.query(sql, params, function(err, results) {
+    if(err) {
+      return res.json({
+        code: 1,
+        msg: 'error'
+      })
+    }
+    res.json({
+      code: 0,
+      msg: 'success',
+      data: results[0]
+    })
+  })
+})
 
-// 根据姓名查询数据
-app.get('/students/getListByName', function(req, res) {
-	let name = req.query.name;
-	let sql = 'select * from students where name = ?'
-	connection.query(sql, name, function(err, results) {
-		if (err) {
-			return res.json({
-				code: 1,
-				message: 'error'
-			});
-		}
-		res.json({
-			code: 0,
-			messagea: 'success',
-			data: results
-		});
-	});
-});
+// edit 接口
+app.post('/user/edit', function(req, res) {
+  let sql = 'update user set name = ?, age = ?, sex = ? where id = ?';
+  let params = [req.body.name, req.body.age, req.body.sex, req.body.id];
+  connection.query(sql, params, function(err, results) {
+    if(err) {
+      return res.json({
+        code: 1,
+        msg: 'error'
+      })
+    }
+    res.json({
+      code: 0,
+      msg: 'success'
+    })
+  })
+}) 
 
-
-// 删除操作 post请求
-app.post('/students/delete', function(req, res) {
-	let parms = req.body;
-	let id = parms.id;
-	console.log('parms:', parms);
-	console.log('id', id);
-
-	let sql = 'delete from students where id = ?';
-	connection.query(sql, id, function(err, results) {
-		if (err) {
-			return res.json({
-				code: 1,
-				message: 'error'
-			});
-		}
-		res.json({
-			code: 0,
-			message: 'success',
-		});
-	});
-});
-// 新增
-app.post('/students/add', function(req, res) {
-	var name = req.body.name;
-	var age = req.body.age;
-	var sql = 'insert into students(name,age) values(?,?)';
-	var params = [name, age];
-	connection.query(sql, params, function(err, results) {
-		if (err) {
-			return res.json({
-				code: 1,
-				message: 'error'
-			});
-		}
-		res.json({
-			code: 0,
-			message: 'success',
-			data: results
-		});
-	});
-});
-
-
-// 修改
-app.post('/students/update', function(req, res) {
-	var id = req.body.id;
-	var name = req.body.name;
-	var age = req.body.age;
-	var sql = 'update students set name = ?,age=? where id =?';
-	var params = [name,age,id];
-	connection.query(sql,params,function(err,results){
-		console.log(results);
-		if(err){
-			return res.json({
-				code:1,
-				message:'error'
-			});
-		}
-		return res.json({
-			code:0,
-			message:'success',
-			data:results
-		});
-	});
-});
+// add 接口
+app.post('/user/add', function(req, res) {
+  let sql = 'insert into user(name, age, sex) values(?, ?, ?)';
+  let params = [req.body.name, req.body.age, req.body.sex];
+  connection.query(sql, params, function(err, results) {
+    if(err) {
+      return res.json({
+        code: 1,
+        msg: 'error'
+      })
+    }
+    res.json({
+      code: 0,
+      msg: 'success'
+    })
+  })
+})
 
 app.listen(3001, function() {
 	console.log('服务启动成功');
