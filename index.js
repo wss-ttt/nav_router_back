@@ -132,8 +132,8 @@ app.post('/user/info', function (req, res) {
 
 // edit 接口
 app.post('/user/edit', function (req, res) {
-  let sql = 'update user set name = ?, age = ?, sex = ? where id = ?';
-  let params = [req.body.name, req.body.age, req.body.sex, req.body.id];
+  let sql = 'update user set name = ?, password = ?, age = ?, sex = ? where id = ?';
+  let params = [req.body.name, req.body.password, req.body.age, req.body.sex, req.body.id];
   connection.query(sql, params, function (err, results) {
     if (err) {
       return res.json({
