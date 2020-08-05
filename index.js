@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mysql = require("mysql");
+const fs = require('fs')
 // 1 引入body-parser包
 const bodyParser = require('body-parser');
 
@@ -156,6 +157,39 @@ app.post('/user/add', function (req, res) {
       msg: 'success'
     })
   })
+})
+
+// echarts图表数据 - 柱状图(月份-温度)
+app.post('/temperature/data', function(req, res) {
+	let xData = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+	let yData = []
+	for(let i =0; i < 12; i++) {
+		yData.push(Math.round(Math.random() * 100))
+	}
+	res.json({
+		code: 0,
+		msg: 'success',
+		data: {
+			xData: xData,
+			yData: yData
+		}
+	})
+})
+
+app.post('/map/data', function(req, res) {
+	fs.readFile('./mapData/hubei.json', 'utf8', function(err, data) {
+		if(err) {
+			return res.json({
+				code: 1,
+				msg: 'error'
+			})
+		}
+		res.json({
+			code: 0,
+			msg: 'success',
+			data: JSON.parse(data)
+		})
+	})
 })
 
 app.listen(3001, function () {
