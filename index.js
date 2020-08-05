@@ -68,8 +68,15 @@ app.post('/login', function (req, res) {
 
 // 查询
 app.post('/user/list', function (req, res) {
-  let sql = 'select * from user'
-  connection.query(sql, function (err, results) {
+	let name = req.body.name
+	let sql = ''
+	if(name) {
+		sql = 'select * from user where name = ?'
+	} else {
+		sql = 'select * from user'
+	}
+	let params = [name]
+  connection.query(sql, params, function (err, results) {
     if (err) {
       return res.json({
         code: 1,
